@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { PersonsService } from './persons.service';
 
 @Component({
   selector: 'app-persons',
   templateUrl: './persons.component.html'
 })
-export class PersonsComponent implements OnInit{
+export class PersonsComponent implements OnInit, OnDestroy {
   personList: string[];
+  personListSubs: Subscription;
   //private prsnService: PersonsService; 
 
   constructor(private prsService: PersonsService) {
@@ -15,10 +17,14 @@ export class PersonsComponent implements OnInit{
 
   ngOnInit(): void {
     // use lifecycle hook to get service info (better that doing in constructor)
-    this.prsService.personsChanged.subscribe(persons => {
+    this.personListSubs = this.prsService.personsChanged.subscribe(persons => {
       this.personList = persons;
     });
     this.personList = this.prsService.persons;
+  }
+
+  ngOnDestroy(): void {
+    this.personListSubs.unsubscribe();
   }
 
   onRemovePerson(name: string) {
