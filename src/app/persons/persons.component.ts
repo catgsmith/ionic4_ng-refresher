@@ -15,6 +15,13 @@ export class PersonsComponent implements OnInit{
 
   ngOnInit(): void {
     // use lifecycle hook to get service info (better that doing in constructor)
+    this.prsService.personsChanged.subscribe(persons => {
+      this.personList = persons;
+    });
     this.personList = this.prsService.persons;
   }
+
+  onRemovePerson(name: string) {
+    this.prsService.removePerson(name);
+  } 
 }
