@@ -9,6 +9,7 @@ import { PersonsService } from './persons.service';
 export class PersonsComponent implements OnInit, OnDestroy {
   personList: string[];
   personListSubs: Subscription;
+  isFetching: boolean;
   //private prsnService: PersonsService; 
 
   constructor(private prsService: PersonsService) {
@@ -19,8 +20,10 @@ export class PersonsComponent implements OnInit, OnDestroy {
     // use lifecycle hook to get service info (better that doing in constructor)
     this.personListSubs = this.prsService.personsChanged.subscribe(persons => {
       this.personList = persons;
+      this.isFetching = false;
     });
-    this.prsService.fetchPersons();
+    this.isFetching = true;
+    setTimeout(() => { this.prsService.fetchPersons(); }, 1000);
   }
 
   ngOnDestroy(): void {
